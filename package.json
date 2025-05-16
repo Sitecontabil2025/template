@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "aos": "^2.3.4",
+    "bootstrap": "^5.3.3",
+    "jquery": "^3.7.1",
+    "jquery-confirm": "^3.3.4",
+    "jquery-mask-plugin": "^1.14.16",
+    "swiper": "^11.2.4",
+    "cookie": "https://sistema.sitecontabil.com.br/base/cookie-1.0.0.tgz"
+  }
+}
