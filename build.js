@@ -65,7 +65,7 @@ const fileContents = {
 <?php include 'footer.php'; ?>`,
 
     "footer.php":
-        `<a id="whatsapp" class="d-flex align-items-center justify-content-center" href="<?= whatsapp('Estou entrando em contato pelo site!') ?>" class="btn-whatsapp" target="_blank">
+        `<a id="whatsapp" class="btn-whatsapp" href="<?= whatsapp('Estou entrando em contato pelo site!') ?>" target="_blank">
     <i class="fab fa-whatsapp"></i>
 </a>
 
@@ -235,7 +235,6 @@ const scssFiles = {
 @import "_buttons"`,
 
     "_variables.scss": `// URLs
-$urlFont: '../fonts/';
 $urlImg: '../images/';
 
 // FONT-FAMILY
@@ -305,16 +304,19 @@ button {
 @import "../../node_modules/bootstrap/scss/bootstrap";`,
     "_buttons.scss": `.btn{
     &-whatsapp{
-    width: 55px;
-    height: 55px;
-    position: fixed; 
-    bottom: 10px;
-    right: 10px;
-    background-color: #25d366;
-    color: var(--bs-white);
-    border-radius: 50%; 
-    @include rfs(25px);
-    z-index: 1000;
+        width: 55px;
+        height: 55px;
+        @include rfs(25px);
+        text-align: center;
+        align-content: center;
+        color: var(--bs-white);
+        background-color: #25d366;
+        border-radius: 50%;
+        border: 2px solid var(--bs-white);
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 1000;
     }
 }
 `
