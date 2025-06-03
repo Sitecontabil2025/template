@@ -120,8 +120,8 @@ function phone_link($phone)
 
 // LINKS DAS REDES SOCIAIS
 $facebook = "https://www.facebook.com/";
-$instagram = "https://www.linkedin.com/";
-$linkedin = "https://www.instagram.com/";
+$instagram = "https://www.instagram.com/";
+$linkedin = "https://www.linkedin.com/";
 
 // ANO DESENVOLVIMENTO DO SITE
 function ano_copy($ano = 2025)
