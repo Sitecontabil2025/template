@@ -23,7 +23,7 @@ const fileContents = {
 <?php $json_ler = (isset($url_json_ler)) ? get_materias($url_json_ler) : NULL; ?>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $escritorio; ?> - <?= $titulo_pagina; ?></title>
 
     <!-- FAVICON -->
@@ -266,6 +266,7 @@ $spacers: (
     --bs-white: #FFFFFF;
     --bs-black: #000000;
 }
+    $min-contrast-ratio: 2 !default;
 `,
 
     "_base.scss": `body {
