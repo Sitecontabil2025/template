@@ -83,8 +83,8 @@ const fileContents = {
 
     "dados.php": `<?php
 $escritorio = "Escritório Contábil";
-$descricao = "Atuamos no mercado auxiliando as empresas, quanto a sua constituição, administração, consultorias e quando necessário, no encerramento das mesmas. Possuímos uma equipe de profissionais gabaritados nas áreas contábil, fiscal, trabalhista e de assessoria.";
-$keywords = "contabilidade, contábil, escritório, serviços";
+$descricao = "";
+$keywords = "";
 $crc = 'CRC/UF 00000-0';
 
 $endereco = "Nome da Rua, nº 00";
