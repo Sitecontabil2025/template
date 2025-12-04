@@ -669,7 +669,7 @@ assets.forEach(asset => {
 // -----------------------------
 const blogControllerPath = path.join(projectRoot, "blog/application/controllers/Blog.php");
 
-// Função para escapar aspas e caracteres do PHP
+// Função para escapar strings para PHP
 function phpEscape(str) {
     return String(str)
         .replace(/\\/g, "\\\\")
@@ -679,44 +679,47 @@ function phpEscape(str) {
 if (fs.existsSync(blogControllerPath)) {
     let blogContent = fs.readFileSync(blogControllerPath, "utf8");
 
+    // Agora usando SOMENTE data.xxx (correto!)
     const replacements = {
-        escritorio,
-        endereco,
-        numero,
-        complemento,
-        bairro,
-        cidade,
-        estado,
-        cep,
-        telefone,
-        whatsapp,
-        email,
-        mapa,
-        facebook,
-        instagram,
-        linkedin,
+        escritorio: data.escritorio,
+        endereco: data.endereco,
+        numero: data.numero,
+        complemento: data.complemento,
+        bairro: data.bairro,
+        cidade: data.cidade,
+        estado: data.estado,
+        cep: data.cep,
+        telefone: data.telefone,
+        whatsapp: data.whatsapp,
+        email: data.email,
+        mapa: data.mapa,
+        facebook: data.facebook,
+        instagram: data.instagram,
+        linkedin: data.linkedin,
         twitter: "",
-        site: `https://${dominio}/`
+        site: `https://${data.dominio}/`,
+        cor: data.cor1
     };
 
     Object.keys(replacements).forEach(key => {
         const escapedValue = phpEscape(replacements[key]);
 
+        // regex que acha:  $this->dados['campo'] = 'valor';
         const regex = new RegExp(
             String.raw`\$this->dados\['${key}'\]\s*=\s*'[^']*';`,
             "g"
         );
 
-        const replacement = `$this->dados['${key}'] = '${escapedValue}';`;
+        const newLine = `$this->dados['${key}'] = '${escapedValue}';`;
 
         if (regex.test(blogContent)) {
-            // Substitui o valor existente
-            blogContent = blogContent.replace(regex, replacement);
+            // Substitui se existir
+            blogContent = blogContent.replace(regex, newLine);
         } else {
-            // Se o campo não existir, insere dentro do __construct
+            // Insere dentro do __construct caso não exista
             blogContent = blogContent.replace(
                 /public function __construct\(\)\s*\{[\s\S]*?parent::__construct\(\);?/,
-                match => match + `\n        ${replacement}`
+                match => match + `\n        ${newLine}`
             );
         }
     });
@@ -726,6 +729,7 @@ if (fs.existsSync(blogControllerPath)) {
 } else {
     console.log("⚠️ Blog não encontrado, pulando atualização de Blog.php");
 }
+
 
 
 console.log("🚀 Build concluída!");
