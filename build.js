@@ -664,45 +664,67 @@ assets.forEach(asset => {
     copyFile(asset.src, path.join(projectRoot, asset.dest));
 });
 
-// ===============================
-// ATUALIZAR Blog.php AUTOMATICAMENTE
-// ===============================
-const blogController = path.join(projectRoot, "blog/application/controllers/Blog.php");
+// -----------------------------
+// ATUALIZAÇÃO DO BLOG.PHP
+// -----------------------------
+const blogControllerPath = path.join(projectRoot, "blog/application/controllers/Blog.php");
+
+// Função para escapar aspas e caracteres do PHP
+function phpEscape(str) {
+    return String(str)
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+}
 
 if (fs.existsSync(blogControllerPath)) {
-    let content = fs.readFileSync(blogControllerPath, "utf8");
+    let blogContent = fs.readFileSync(blogControllerPath, "utf8");
 
-    // MAPEAMENTO DAS VARIÁVEIS
     const replacements = {
-        "escritorio": data.escritorio,
-        "cor": data.cor1,
-        "endereco": data.endereco,
-        "numero": data.numero,
-        "complemento": data.complemento,
-        "bairro": data.bairro,
-        "cidade": data.cidade,
-        "estado": data.estado,
-        "cep": data.cep,
-        "telefone": data.telefone,
-        "whatsapp": data.whatsapp,
-        "email": data.email,
-        "mapa": data.mapa,
-        "facebook": data.facebook,
-        "instagram": data.instagram,
-        "linkedin": data.linkedin,
-        "site": `https://${data.dominio}/`
+        escritorio,
+        endereco,
+        numero: "",
+        complemento: "",
+        bairro,
+        cidade,
+        estado:,
+        cep,
+        telefone,
+        whatsapp,
+        email,
+        mapa:,
+        facebook,
+        instagram,
+        linkedin,
+        twitter: "",
+        site: `https://${dominio}/`
     };
 
-    // Substituir valores no Blog.php
-    Object.keys(map).forEach(key => {
-        const regex = new RegExp(`\$this->dados\['${key}'\] = '.*?';`);
-        content = content.replace(regex, `$this->dados['${key}'] = '${map[key]}';`);
+    Object.keys(replacements).forEach(key => {
+        const escapedValue = phpEscape(replacements[key]);
+
+        const regex = new RegExp(
+            String.raw`\$this->dados\['${key}'\]\s*=\s*'[^']*';`,
+            "g"
+        );
+
+        const replacement = `$this->dados['${key}'] = '${escapedValue}';`;
+
+        if (regex.test(blogContent)) {
+            // Substitui o valor existente
+            blogContent = blogContent.replace(regex, replacement);
+        } else {
+            // Se o campo não existir, insere dentro do __construct
+            blogContent = blogContent.replace(
+                /public function __construct\(\)\s*\{[\s\S]*?parent::__construct\(\);?/,
+                match => match + `\n        ${replacement}`
+            );
+        }
     });
 
-    fs.writeFileSync(blogController, content, "utf8");
-    console.log("📝 Blog.php atualizado.");
+    fs.writeFileSync(blogControllerPath, blogContent, "utf8");
+    console.log("📝 Blog.php atualizado com sucesso!");
 } else {
-    console.log("⚠️ Blog não encontrado — ignorando atualização do Blog.php");
+    console.log("⚠️ Blog não encontrado, pulando atualização de Blog.php");
 }
 
 
