@@ -29,7 +29,7 @@ const data = {
     escritorio: padrao(escritorio, "Escritório Contábil"),
     endereco: padrao(endereco, "Rua Exemplo"),
     numero: padrao(numero, "00"),
-    complemento: padrao(complemento, ""),
+    complemento: padrao(complemento, "Complemento"),
     bairro: padrao(bairro, "Centro"),
     cidade: padrao(cidade, "Cidade"),
     estado: padrao(estado, "UF"),
