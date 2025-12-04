@@ -651,4 +651,50 @@ assets.forEach(asset => {
     copyFile(asset.src, path.join(projectRoot, asset.dest));
 });
 
+// ===============================
+// ATUALIZAR Blog.php AUTOMATICAMENTE
+// ===============================
+const blogControllerPath = path.join(projectRoot, "blog", "application", "controllers", "Blog.php");
+
+if (fs.existsSync(blogControllerPath)) {
+    let content = fs.readFileSync(blogControllerPath, "utf8");
+
+    // MAPEAMENTO DAS VARIÁVEIS
+    const replacements = {
+        "escritorio": escritorio,
+        "cor": cor1,
+        "endereco": endereco,
+        "numero": "",
+        "complemento": "",
+        "bairro": bairro,
+        "cidade": cidade,
+        "estado": cidade.split("/")[1] || "",
+        "cep": cep,
+        "telefone": telefone,
+        "whatsapp": whatsapp,
+        "email": email,
+        "mapa": mapa,
+        "facebook": facebook,
+        "instagram": instagram,
+        "linkedin": linkedin,
+        "site": `https://${dominio}/`
+    };
+
+    // Substituir valores no Blog.php
+    Object.keys(replacements).forEach(key => {
+        const value = replacements[key]
+            .replace(/\\/g, "\\\\")
+            .replace(/"/g, '\\"');
+
+        const regex = new RegExp(`\\$this->dados\\['${key}'\\] = '.*?';`, "g");
+        content = content.replace(regex, `$this->dados['${key}'] = '${value}';`);
+    });
+
+    fs.writeFileSync(blogControllerPath, content, "utf8");
+    console.log(`✅ Blog.php atualizado com dados do cliente.`);
+} else {
+    console.log("⚠️ Blog não encontrado — ignorando atualização do Blog.php");
+}
+
+
 console.log("🚀 Build concluída!");
