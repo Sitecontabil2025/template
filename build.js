@@ -19,20 +19,23 @@ const args = process.argv.slice(2);
 
 const escritorio = args[0] || "Escritório Contábil";
 const endereco = args[1] || "Nome da Rua, nº 00";
-const bairro = args[2] || "Bairro";
-const cidade = args[3] || "Cidade/UF";
-const cep = args[4] || "CEP. 00000-000";
-const mapaLink = args[5] || "https://maps.app.goo.gl/5gF94fPtCJJj9DR68";
-const mapa = args[6] || '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.4995075802503!2d-49.6248452891247!3d-22.89493983736129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c06a39daf95555%3A0x4243758b396d07a2!2sSitecontabil!5e0!3m2!1spt-BR!2sbr!4v1728559990162!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
-const email = args[7] || "contato@dominio.com.br";
-const telefone = args[8] || "(00) 0000-0000";
-const whatsapp = args[9] || "(00) 9.0000-0000";
-const facebook = args[10] || "https://www.facebook.com/";
-const instagram = args[11] || "https://www.instagram.com/";
-const linkedin = args[12] || "https://www.linkedin.com/";
-const cor1 = args[13] || "#007381;";
-const cor2 = args[14] || "#8a8c4f";
-const dominio = args[15] || "dominio.com.br"
+const numero = args[2] || "00";
+const complemento = args[3] || "";
+const bairro = args[4] || "Bairro";
+const cidade = args[5] || "Cidade";
+const estado = args[6] || "UF";
+const cep = args[7] || "CEP. 00000-000";
+const mapaLink = args[8] || "https://maps.app.goo.gl/5gF94fPtCJJj9DR68";
+const mapa = args[9] || '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.4995075802503!2d-49.6248452891247!3d-22.89493983736129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c06a39daf95555%3A0x4243758b396d07a2!2sSitecontabil!5e0!3m2!1spt-BR!2sbr!4v1728559990162!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+const email = args[10] || "contato@dominio.com.br";
+const telefone = args[11] || "(00) 0000-0000";
+const whatsapp = args[12] || "(00) 9.0000-0000";
+const facebook = args[13] || "https://www.facebook.com/";
+const instagram = args[14] || "https://www.instagram.com/";
+const linkedin = args[15] || "https://www.linkedin.com/";
+const cor1 = args[16] || "#007381;";
+const cor2 = args[17] || "#8a8c4f";
+const dominio = args[18] || "dominio.com.br"
 
 const fileContents = {
     "header.php": `<!DOCTYPE html>
@@ -105,9 +108,9 @@ $descricao = "Atuamos no mercado auxiliando as empresas, quanto a sua constitui�
 $keywords = "contabilidade, contábil, escritório, serviços";
 $crc = 'CRC/UF 00000-0';
 
-$endereco = "${endereco}";
+$endereco = "${endereco}, ${numero} ${complemento}";
 $bairro = "${bairro}";
-$cidade = "${cidade}";
+$cidade = "${cidade}/${estado}";
 $cep = "${cep}";
 $mapa_link = "${mapaLink}";
 $mapa_iframe = '${mapa}';
@@ -664,11 +667,11 @@ if (fs.existsSync(blogControllerPath)) {
         "escritorio": escritorio,
         "cor": cor1,
         "endereco": endereco,
-        "numero": "",
-        "complemento": "",
+        "numero": numero,
+        "complemento": complemento,
         "bairro": bairro,
         "cidade": cidade,
-        "estado": cidade.split("/")[1] || "",
+        "estado": estado,
         "cep": cep,
         "telefone": telefone,
         "whatsapp": whatsapp,
