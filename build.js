@@ -16,7 +16,7 @@ folders.forEach(folder => {
 const files = ["header.php", "index.php", "footer.php", "dados.php", "enviar.php"];
 
 const [
-    escritorio, endereco, numero, complento, bairro, cidade, estado, cep, mapaLink, mapa,
+    escritorio, endereco, numero, complemento, bairro, cidade, estado, cep, mapaLink, mapa,
     email, telefone, whatsapp, facebook, instagram, linkedin,
     cor1, cor2, dominio
 ] = process.argv.slice(2);
