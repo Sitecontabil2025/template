@@ -664,12 +664,11 @@ assets.forEach(asset => {
     copyFile(asset.src, path.join(projectRoot, asset.dest));
 });
 
-// -----------------------------
-// ATUALIZAÇÃO DO BLOG.PHP
-// -----------------------------
+// ---------------------------------------------
+//  ATUALIZAÇÃO DO BLOG.PHP 100% FUNCIONAL
+// ---------------------------------------------
 const blogControllerPath = path.join(projectRoot, "blog/application/controllers/Blog.php");
 
-// Função para escapar strings para PHP
 function phpEscape(str) {
     return String(str)
         .replace(/\\/g, "\\\\")
@@ -677,11 +676,15 @@ function phpEscape(str) {
 }
 
 if (fs.existsSync(blogControllerPath)) {
+
     let blogContent = fs.readFileSync(blogControllerPath, "utf8");
 
-    // Agora usando SOMENTE data.xxx (correto!)
     const replacements = {
         escritorio: data.escritorio,
+        titulo: data.escritorio + " - Blog",
+        descricao: "Conteúdos e novidades do escritório " + data.escritorio,
+        cor: data.cor1,
+        theme: "light",
         endereco: data.endereco,
         numero: data.numero,
         complemento: data.complemento,
@@ -692,44 +695,40 @@ if (fs.existsSync(blogControllerPath)) {
         telefone: data.telefone,
         whatsapp: data.whatsapp,
         email: data.email,
-        mapa: data.mapa,
+        mapa: data.mapaLink, // mapa do blog é texto!
         facebook: data.facebook,
         instagram: data.instagram,
         linkedin: data.linkedin,
         twitter: "",
-        site: `https://${data.dominio}/`,
-        cor: data.cor1
+        site: `https://${data.dominio}/`
     };
 
-    Object.keys(replacements).forEach(key => {
-        const escapedValue = phpEscape(replacements[key]);
+    Object.keys(replacements).forEach(campo => {
 
-        // regex que acha:  $this->dados['campo'] = 'valor';
+        const escapedValue = phpEscape(replacements[campo]);
+
         const regex = new RegExp(
-            String.raw`\$this->dados\['${key}'\]\s*=\s*'[^']*';`,
+            String.raw`\$this->dados\['${campo}'\]\s*=\s*'[^']*';`,
             "g"
         );
 
-        const newLine = `$this->dados['${key}'] = '${escapedValue}';`;
+        const newLine = `$this->dados['${campo}'] = '${escapedValue}';`;
 
         if (regex.test(blogContent)) {
-            // Substitui se existir
             blogContent = blogContent.replace(regex, newLine);
         } else {
-            // Insere dentro do __construct caso não exista
             blogContent = blogContent.replace(
-                /public function __construct\(\)\s*\{[\s\S]*?parent::__construct\(\);?/,
-                match => match + `\n        ${newLine}`
+                /public function __construct\s*\(\)\s*\{/,
+                match => `${match}\n        ${newLine}`
             );
         }
     });
 
     fs.writeFileSync(blogControllerPath, blogContent, "utf8");
-    console.log("📝 Blog.php atualizado com sucesso!");
+    console.log("📘 Blog.php atualizado com sucesso!");
+
 } else {
-    console.log("⚠️ Blog não encontrado, pulando atualização de Blog.php");
+    console.log("⚠️ O Blog não foi encontrado");
 }
-
-
 
 console.log("🚀 Build concluída!");
