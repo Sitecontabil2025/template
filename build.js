@@ -561,21 +561,19 @@ function copyFile(src, dest) {
 
 const scriptJsPath = path.join(projectRoot, "assets/js", "script.js");
 
-const scriptJsContent = `document.addEventListener("DOMContentLoaded", function () {
-    // Máscara para celular
-    const masks = document.querySelectorAll('.celular-mask');
-    masks.forEach(input => {
-        input.addEventListener('input', function () {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length <= 10) {
-                this.value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-            } else {
-                this.value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+const scriptJsContent = `$(document).ready(function () {
+    var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    },
+        spOptions = {
+            onKeyPress: function (val, e, field, options) {
+                field.mask(SPMaskBehavior.apply({}, arguments), options);
             }
-        });
-    });
+        };
+    $('.celular-mask').mask(SPMaskBehavior, spOptions);
+});
 
-    $loading = $.dialog({
+$loading = $.dialog({
     content: "Enviando sua mensagem",
     title: false,
     type: "green",
@@ -614,7 +612,7 @@ $('#formcontato').on('submit', function (e) {
                 buttons: {
                     ok: function (okButton) {
                         if (resposta.tipo == "green") {
-                            location.href = "https://${data.dominio}"
+                            location.href = "https://lavouracontabil.com.br"
                         }
                     }
                 }
