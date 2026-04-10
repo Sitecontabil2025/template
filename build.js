@@ -29,19 +29,19 @@ const data = {
     escritorio: padrao(escritorio, "Escritório Contábil"),
     endereco: padrao(endereco, "Rua Exemplo"),
     numero: padrao(numero, "00"),
-    complemento: padrao(complemento, "Complemento"),
+    complemento: padrao(complemento, ""),
     bairro: padrao(bairro, "Centro"),
     cidade: padrao(cidade, "Cidade"),
     estado: padrao(estado, "UF"),
     cep: padrao(cep, "00000-000"),
-    mapaLink: padrao(mapaLink, "#"),
-    mapa: padrao(mapa, "<iframe></iframe>"),
+    mapaLink: padrao(mapaLink, ""),
+    mapa: padrao(mapa, ""),
     email: padrao(email, "contato@dominio.com"),
     telefone: padrao(telefone, "(11) 0000-0000"),
     whatsapp: padrao(whatsapp, "(11) 90000-0000"),
-    facebook: padrao(facebook, "#"),
-    instagram: padrao(instagram, "#"),
-    linkedin: padrao(linkedin, "#"),
+    facebook: padrao(facebook, ""),
+    instagram: padrao(instagram, ""),
+    linkedin: padrao(linkedin, ""),
     cor1: padrao(cor1, "#007381"),
     cor2: padrao(cor2, "#8a8c4f"),
     dominio: padrao(dominio, "dominio.com.br")
@@ -59,14 +59,14 @@ const fileContents = {
     <title><?= $escritorio; ?> - <?= $titulo_pagina; ?></title>
 
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url('assets/images/favicon.png') ?>" type="image/x-icon">
 
     <!-- SEO META TAGS -->
     <meta property="og:title" content="<?= $titulo_pagina; ?>" />
     <meta property="og:description" content="<?= $descricao_pagina; ?>" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="<?= $escritorio; ?>" />
-    <meta property="og:image" content="assets/images/og-img.jpg">
+    <meta property="og:image" content="<?= base_url('assets/images/og-img.jpg') ?>">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="600">
@@ -80,13 +80,13 @@ const fileContents = {
     <meta name="resource-type" content="website" />
 
     <!-- ARQUIVOS CSS -->
-    <link rel="stylesheet" href="assets/css/aos.css">
-    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
-     <link rel="stylesheet" href="assets/css/jquery-confirm.min.css">
-    <link rel="stylesheet" href="assets/css/style.min.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/jquery-confirm.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/aos.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/swiper-bundle.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/style.min.css?v=' . time()) ?>">
 
     <!-- ARQUIVOS JS -->
-    <script src="assets/js/jquery.min.js"> </script>
+    <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer> </script>
     
 </head>
@@ -102,12 +102,13 @@ const fileContents = {
 </a>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.1.0/css/all.css">
-<script src="assets/js/cookie.min.js" data-position="left" data-hide="true" data-cor="var(--bs-primary)"></script>
-<script src="assets/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/swiper-bundle.min.js"></script>
-<script src="assets/js/aos.js"></script>
-<script src="assets/js/jquery-confirm.min.js"></script>
-<script src="assets/js/script.min.js"></script>
+<script src="<?= base_url('assets/js/cookie.min.js') ?>" data-position="left" data-hide="true" data-cor="var(--bs-primary)"></script>
+<script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/swiper-bundle.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/jquery.mask.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/jquery-confirm.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/aos.js') ?>"></script>
+<script src="<?= base_url('assets/js/script.min.js') ?>"></script>
 
 </body>
 </html>`,
@@ -246,6 +247,18 @@ $regiao = array(
     'se' => 'Sergipe',
     'to' => 'Tocantins',
 );
+
+function base_url($path = '')
+{
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+
+    // Se estiver em subpasta, detecta automaticamente
+    $script = $_SERVER['SCRIPT_NAME'];
+    $pathBase = str_replace(basename($script), '', $script);
+
+    return $protocol . $host . $pathBase . ltrim($path, '/');
+}
 `,
     "enviar.php": `<?php
 // ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
@@ -612,7 +625,7 @@ $('#formcontato').on('submit', function (e) {
                 buttons: {
                     ok: function (okButton) {
                         if (resposta.tipo == "green") {
-                            location.href = "https://lavouracontabil.com.br"
+                            location.href = "https://${data.dominio}"
                         }
                     }
                 }
@@ -662,70 +675,6 @@ const assets = [
 assets.forEach(asset => {
     copyFile(asset.src, path.join(projectRoot, asset.dest));
 });
-
-// -------------------------------------------------------------
-//      ATUALIZAÇÃO DO BLOG.PHP — COMPATÍVEL COM SEU ARQUIVO
-// -------------------------------------------------------------
-const blogControllerPath = path.join(projectRoot, "blog/application/controllers/Blog.php");
-
-function phpEscape(str) {
-    return String(str)
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
-}
-
-if (fs.existsSync(blogControllerPath)) {
-
-    let blogContent = fs.readFileSync(blogControllerPath, "utf8");
-
-    // Mapeamento EXATO conforme seu Blog.php real
-    const replacements = {
-        escritorio: data.escritorio,
-        titulo: `${data.escritorio} - Blog`,
-        descricao: `Conteúdos e novidades do escritório ${data.escritorio}`,
-        cor: data.cor1,
-        theme: "light",
-        endereco: data.endereco,
-        numero: data.numero,
-        complemento: data.complemento,
-        bairro: data.bairro,
-        cidade: data.cidade,
-        estado: data.estado,
-        cep: data.cep,
-        telefone: data.telefone,
-        whatsapp: data.whatsapp,
-        email: data.email,
-        mapa: data.mapaLink || "#",
-        facebook: data.facebook,
-        instagram: data.instagram,
-        linkedin: data.linkedin,
-        twitter: "",
-        site: `https://${data.dominio}/`
-    };
-
-    Object.keys(replacements).forEach(key => {
-        const value = phpEscape(replacements[key]);
-
-        // Regex compatível COM O SEU ARQUIVO
-        const regex = new RegExp(
-            String.raw`\$this->dados\['${key}'\']\s*=\s*'[^']*';`
-                .replace("''", "'"), // segurança extra
-            "g"
-        );
-
-        const newLine = `$this->dados['${key}'] = '${value}';`;
-
-        // Se existir, substitui
-        if (regex.test(blogContent)) {
-            blogContent = blogContent.replace(regex, newLine);
-        }
-    });
-
-    fs.writeFileSync(blogControllerPath, blogContent, "utf8");
-    console.log("📘 Blog.php atualizado com sucesso!");
-} else {
-    console.log("⚠️ Blog não encontrado — atualização ignorada.");
-}
 
 
 console.log("🚀 Build concluída!");
