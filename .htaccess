@@ -1,85 +1,123 @@
 RewriteEngine On
-RewriteCond %{HTTPS} off
+
+# --------------------------------------------------
+# 🔒 IGNORA validações (SSL / cPanel)
+# --------------------------------------------------
 RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
 RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/.+$
 RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/[0-9a-zA-Z_-]+$
 RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
 
-#Força a utilizar Cache-Control e Expires header
+# --------------------------------------------------
+# 🔁 REMOVE .php DA URL (redireciona)
+# Ex: /sobre.php → /sobre
+# --------------------------------------------------
+RewriteCond %{THE_REQUEST} \s/([^.]+)\.php [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# --------------------------------------------------
+# 🔁 ADICIONA .php INTERNAMENTE
+# Ex: /sobre → /sobre.php
+# --------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# --------------------------------------------------
+# 🔧 REGRAS DE SERVIÇOS
+# --------------------------------------------------
+RewriteRule ^servico-[a-zA-Z0-9_-]+$ servico.php [L,QSA]
+RewriteRule ^servico-[a-zA-Z0-9_-]+\.php$ servico.php [L,QSA]
+RewriteRule ^utilitarios-[a-zA-Z0-9_-]+$ utilitarios.php [L,QSA]
+RewriteRule ^utilitarios-[a-zA-Z0-9_-]+\.php$ utilitarios.php [L,QSA]
+
+# --------------------------------------------------
+# 🚀 CACHE (Performance)
+# --------------------------------------------------
 <IfModule mod_headers.c>
-Header unset ETag
+    Header unset ETag
 </IfModule>
- FileETag None
+
+FileETag None
+
 <IfModule mod_expires.c>
-ExpiresActive on
-ExpiresDefault "access plus 1 month"
-ExpiresByType text/cache-manifest "access plus 0 seconds"
-# Html
-ExpiresByType text/html "access plus 0 seconds"
-# Data
-ExpiresByType text/xml "access plus 0 seconds"
-ExpiresByType application/xml "access plus 0 seconds"
-ExpiresByType application/json "access plus 0 seconds"
-# Feed
-ExpiresByType application/rss+xml "access plus 1 hour"
-ExpiresByType application/atom+xml "access plus 1 hour"
-# Favicon
-ExpiresByType image/x-icon "access plus 1 week"
-# Media: images, video, audio
-ExpiresByType image/gif "access plus 1 month"
-ExpiresByType image/png "access plus 1 month"
-ExpiresByType image/jpg "access plus 1 month"
-ExpiresByType image/jpeg "access plus 1 month"
-ExpiresByType video/ogg "access plus 1 month"
-ExpiresByType audio/ogg "access plus 1 month"
-ExpiresByType video/mp4 "access plus 1 month"
-ExpiresByType video/webm "access plus 1 month"
-# HTC files
-ExpiresByType text/x-component "access plus 1 month"
-# Webfonts
-ExpiresByType application/x-font-ttf "access plus 1 month"
-ExpiresByType font/opentype "access plus 1 month"
-ExpiresByType application/x-font-woff "access plus 1 month"
-ExpiresByType image/svg+xml "access plus 1 month"
-ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
-# CSS / JS
-ExpiresByType text/css "access plus 1 year"
-ExpiresByType application/javascript "access plus 1 year"
-ExpiresByType application/x-javascript "access plus 1 year"
+    ExpiresActive on
+    ExpiresDefault "access plus 1 month"
+
+    # HTML
+    ExpiresByType text/html "access plus 0 seconds"
+
+    # Dados
+    ExpiresByType text/xml "access plus 0 seconds"
+    ExpiresByType application/xml "access plus 0 seconds"
+    ExpiresByType application/json "access plus 0 seconds"
+
+    # Feed
+    ExpiresByType application/rss+xml "access plus 1 hour"
+    ExpiresByType application/atom+xml "access plus 1 hour"
+
+    # Favicon
+    ExpiresByType image/x-icon "access plus 1 week"
+
+    # Imagens
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+
+    # Vídeo / áudio
+    ExpiresByType video/mp4 "access plus 1 month"
+    ExpiresByType video/webm "access plus 1 month"
+    ExpiresByType video/ogg "access plus 1 month"
+    ExpiresByType audio/ogg "access plus 1 month"
+
+    # Fontes
+    ExpiresByType application/x-font-ttf "access plus 1 month"
+    ExpiresByType font/opentype "access plus 1 month"
+    ExpiresByType application/x-font-woff "access plus 1 month"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+
+    # CSS / JS
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
 </IfModule>
-#Força o IE a sempre carregar utilizando a última versão disponível
+
+# --------------------------------------------------
+# 🌐 COMPATIBILIDADE IE
+# --------------------------------------------------
 <IfModule mod_headers.c>
-Header set X-UA-Compatible "IE=Edge,chrome=1"
-<FilesMatch "\.(js|css|gif|png|jpeg|pdf|xml|oga|ogg|m4a|ogv|mp4|m4v|webm|svg|svgz|eot|ttf|otf|woff|ico|webp|appcache|manifest|htc|crx|oex|xpi|safariextz|vcf)$" >
-Header unset X-UA-Compatible
-</FilesMatch>
+    Header set X-UA-Compatible "IE=Edge,chrome=1"
+
+    <FilesMatch "\.(js|css|gif|png|jpeg|pdf|xml|oga|ogg|m4a|ogv|mp4|m4v|webm|svg|eot|ttf|otf|woff|ico|webp)$">
+        Header unset X-UA-Compatible
+    </FilesMatch>
 </IfModule>
 
-
+# --------------------------------------------------
+# 📦 COMPRESSÃO (GZIP)
+# --------------------------------------------------
 <IfModule mod_deflate.c>
-AddOutputFilterByType DEFLATE text/html
-AddOutputFilterByType DEFLATE text/css
-AddOutputFilterByType DEFLATE text/javascript
-AddOutputFilterByType DEFLATE text/xml
-AddOutputFilterByType DEFLATE text/plain
-AddOutputFilterByType DEFLATE image/x-icon
-AddOutputFilterByType DEFLATE image/svg+xml
-AddOutputFilterByType DEFLATE application/rss+xml
-AddOutputFilterByType DEFLATE application/javascript
-AddOutputFilterByType DEFLATE application/x-javascript
-AddOutputFilterByType DEFLATE application/xml
-AddOutputFilterByType DEFLATE application/xhtml+xml
-AddOutputFilterByType DEFLATE application/x-font
-AddOutputFilterByType DEFLATE application/x-font-truetype
-AddOutputFilterByType DEFLATE application/x-font-ttf
-AddOutputFilterByType DEFLATE application/x-font-otf
-AddOutputFilterByType DEFLATE application/x-font-opentype
-AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
-AddOutputFilterByType DEFLATE font/ttf
-AddOutputFilterByType DEFLATE font/otf
-AddOutputFilterByType DEFLATE font/opentype
-# For Older Browsers Which Can't Handle Compression
-BrowserMatch ^Mozilla/4 gzip-only-text/html
-BrowserMatch ^Mozilla/4\.0[678] no-gzip
-BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+
+    # Fontes
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE font/opentype
+
+    # Imagens SVG
+    AddOutputFilterByType DEFLATE image/svg+xml
+
+    # Navegadores antigos
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 </IfModule>
