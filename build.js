@@ -102,7 +102,6 @@ const fileContents = {
 </a>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.1.0/css/all.css">
-<script src="<?= base_url('assets/js/cookie.min.js') ?>" data-position="left" data-hide="true" data-cor="var(--bs-primary)"></script>
 <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/swiper-bundle.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/jquery.mask.min.js') ?>"></script>
