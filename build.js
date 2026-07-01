@@ -155,7 +155,7 @@ $instagram = "${data.instagram}";
 $linkedin = "${data.linkedin}";
 
 // ANO DESENVOLVIMENTO DO SITE
-function ano_copy($ano = 2025)
+function ano_copy($ano = 2026)
 {
     if ($ano < date('Y')):
         return $ano . ' - ' . date('Y');
