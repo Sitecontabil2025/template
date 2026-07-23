@@ -117,6 +117,7 @@ $escritorio = "${data.escritorio}";
 $descricao = "Atuamos no mercado auxiliando as empresas, quanto a sua constituição, administração, consultorias e quando necessário, no encerramento das mesmas. Possuímos uma equipe de profissionais gabaritados nas áreas contábil, fiscal, trabalhista e de assessoria.";
 $keywords = "contabilidade, contábil, escritório, serviços";
 $crc = 'CRC/UF 00000-0';
+$cor = '#D4AF37';
 
 $endereco = "${data.endereco}, ${data.numero} ${data.complemento}";
 $bairro = "${data.bairro}";
