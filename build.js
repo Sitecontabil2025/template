@@ -86,8 +86,6 @@ const fileContents = {
 
     <!-- ARQUIVOS JS -->
     <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer> </script>
-    
 </head>
 <body>`,
 
@@ -103,8 +101,6 @@ const fileContents = {
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.1.0/css/all.css">
 <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/swiper-bundle.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/jquery.mask.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/jquery-confirm.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/aos.js') ?>"></script>
 <script src="<?= base_url('assets/js/script.min.js') ?>"></script>
 
@@ -200,7 +196,7 @@ function get_json($url)
 }
 
 // FUNÇÃO PARA PEGAR MATÉRIAS
-function get_materias($url = "https://sitecontabil.com.br/json/?db=sc_noticias&limite=10")
+function get_materias($url = "https://api-falcon.sitecontabil.com.br/json")
 {
     return json_decode(get_json($url));
 }
@@ -396,7 +392,6 @@ if (!fs.existsSync(scriptJsPath)) {
 const assets = [
     { src: "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", dest: "assets/js/bootstrap.bundle.min.js" },
     { src: "node_modules/jquery/dist/jquery.min.js", dest: "assets/js/jquery.min.js" },
-    { src: "node_modules/jquery-mask-plugin/dist/jquery.mask.min.js", dest: "assets/js/jquery.mask.min.js" },
     { src: "node_modules/swiper/swiper-bundle.min.css", dest: "assets/css/swiper-bundle.min.css" },
     { src: "node_modules/swiper/swiper-bundle.min.js", dest: "assets/js/swiper-bundle.min.js" },
     { src: "node_modules/aos/dist/aos.css", dest: "assets/css/aos.css" },
