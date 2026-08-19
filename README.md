@@ -1,4 +1,4 @@
-# 🧩 Template de Desenvolvimento de Sites – SiteContábil
+# 🧩 Template de Desenvolvimento de Sites – Sitecontabil
 
 Para padronizar e facilitar o desenvolvimento e as alterações em novos sites, criamos este **template** que já vem com os plugins e bibliotecas que mais usamos no dia a dia. Isso ajuda a manter a organização dos nossos projetos e tornar o desenvolvimento muito mais ágil. 🚀
 
